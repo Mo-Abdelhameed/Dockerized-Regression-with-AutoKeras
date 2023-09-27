@@ -158,6 +158,7 @@ This configuration file is used to specify hyperparameters and settings for the 
 }
 ```
 
+
 Fields:
 - seed_value: (Integer) The seed used for random number generation to ensure reproducibility. Default is 123.
 
@@ -176,6 +177,7 @@ Fields:
 - num_layers: (Array of Integers) Specifies the possible number of layers in the model. For example, [2, 3, 4] means the model will search among architectures with 2, 3, or 4 layers.
 
 - num_units: (Array of Integers) Specifies the possible number of neurons (units) in each layer. For example, [30, 40, 50, 80, 90, 100] means the model will search among architectures with layers containing any of these numbers of neurons.
+
 
 
 #### OpenAPI
