@@ -2,6 +2,6 @@
   "seed_value": 123,
   "validation_split": 0.1,
   "prediction_field_name": "prediction",
-  "max_trials": 10,
-  "epochs": 200
+  "max_trials": 5,
+  "epochs": 50
 }

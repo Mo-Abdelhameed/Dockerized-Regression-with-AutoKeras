@@ -4,7 +4,7 @@ from typing import Any, Dict, Tuple
 import pandas as pd
 from feature_engine.encoding import OneHotEncoder
 from joblib import dump, load
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import MinMaxScaler
 
 from config import paths
 from logger import get_logger
@@ -121,7 +121,7 @@ def normalize(
     input_data: pd.DataFrame, schema: RegressionSchema, scaler=None
 ) -> pd.DataFrame:
     """
-    Performs z-score normalization on numeric features of a given dataframe.
+    Performs MinMax normalization on numeric features of a given dataframe.
 
     Args:
         input_data (pd.DataFrame): The data to be normalized.
@@ -138,7 +138,7 @@ def normalize(
         return input_data
     numeric_features = [f for f in numeric_features if f in input_data.columns]
     if scaler is None:
-        scaler = StandardScaler()
+        scaler = MinMaxScaler()
         scaler.fit(input_data[numeric_features])
         dump(scaler, paths.SCALER_FILE)
     else:
