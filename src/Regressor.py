@@ -63,15 +63,13 @@ class Regressor:
     def __init__(self, train_input: pd.DataFrame, schema: RegressionSchema):
         """Construct a new Regressor."""
         self._is_trained: bool = False
-        self.x = train_input.drop(columns=[schema.id, schema.target])
+        self.x = train_input.drop(columns=[schema.target])
         self.y = train_input[schema.target]
         self.schema = schema
         self.model_name = "AutoKeras_regressor"
         self.model_config = read_json_as_dict(paths.MODEL_CONFIG_FILE_PATH)
-
         self.predictor = StructuredDataRegressor(
-            column_names=schema.features,
-            column_types=self.get_column_type_dict(),
+            column_names=list(self.x.columns),
             output_dim=1,
             loss="mean_squared_error",
             max_trials=self.model_config["max_trials"],
