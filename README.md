@@ -140,16 +140,42 @@ The key `instances` contains a list of objects, each of which is a sample for wh
 }
 ```
 
-### Using the Custom Search
+### Configuration File Documentation
+This configuration file is used to specify hyperparameters and settings for the model training process.
 
-To specify custom hyperparameters (number of layers and number of units):
-- Navigate the model_config.json file inside the /src/config directory
-- Set the max_trails key to the maximum number of models to compare
-- Set the custom_search key to true
-- Specify num_units and num_layers as lists of integers
+```json
+{
+  "seed_value": 123,
+  "validation_split": 0.1,
+  "prediction_field_name": "prediction",
+  "max_trials": 10,
+  "epochs": 200,
+  "custom_search": true,
+  "search_space": {
+    "num_layers": [2, 3, 4],
+    "num_units": [30, 40, 50, 80, 90, 100]
+  }
+}
+```
 
-Following this procedure will narrow down search space to the specified values.
-Setting custom_search to False will ignore the num_units and num_layers keys and will widen the search space.
+Fields:
+- seed_value: (Integer) The seed used for random number generation to ensure reproducibility. Default is 123.
+
+- validation_split: (Float) The fraction of the data to be used as validation data. For instance, a value of 0.1 indicates that 10% of the data is reserved for validation purposes.
+
+- prediction_field_name: (String) The name of the field/column in the output data where the model's predictions will be stored. Default is "prediction".
+
+- max_trials: (Integer) The maximum number of trials for searching the best model. Each trial is a unique combination of hyperparameters.
+
+- epochs: (Integer) The number of epochs for training the model.
+
+- custom_search: (Boolean) Indicates whether to use a custom search space for hyperparameters. If false, the model will use default search spaces.
+
+- search_space: (Object) Defines the custom search space for hyperparameters if custom_search is set to true.
+
+- num_layers: (Array of Integers) Specifies the possible number of layers in the model. For example, [2, 3, 4] means the model will search among architectures with 2, 3, or 4 layers.
+
+- num_units: (Array of Integers) Specifies the possible number of neurons (units) in each layer. For example, [30, 40, 50, 80, 90, 100] means the model will search among architectures with layers containing any of these numbers of neurons.
 
 
 #### OpenAPI

@@ -5,7 +5,7 @@ from logger import get_logger
 from Regressor import Regressor, predict_with_model
 from preprocessing.pipeline import run_pipeline
 from schema.data_schema import load_saved_schema
-from utils import read_csv_in_directory, save_dataframe_as_csv
+from utils import read_csv_in_directory, save_dataframe_as_csv, read_json_as_dict
 
 logger = get_logger(task_name="predict")
 
@@ -26,6 +26,7 @@ def run_batch_predictions(
     adds ids into the predictions dataframe,
     and saves the predictions as a CSV file.
     """
+    model_config = read_json_as_dict(paths.MODEL_CONFIG_FILE_PATH)
     x_test = read_csv_in_directory(test_dir)
     data_schema = load_saved_schema(saved_schema_dir)
     ids = x_test[data_schema.id]
@@ -34,7 +35,7 @@ def run_batch_predictions(
     model = Regressor.load(predictor_dir)
     logger.info("Making predictions...")
     predictions_arr = predict_with_model(model, x_test).squeeze()
-    predictions_df = pd.DataFrame({data_schema.id: ids, "prediction": predictions_arr})
+    predictions_df = pd.DataFrame({data_schema.id: ids, model_config["prediction_field_name"]: predictions_arr})
     logger.info("Saving predictions...")
     save_dataframe_as_csv(dataframe=predictions_df, file_path=predictions_file_path)
     logger.info("Batch predictions completed successfully")
