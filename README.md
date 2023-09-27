@@ -140,7 +140,7 @@ The key `instances` contains a list of objects, each of which is a sample for wh
 }
 ```
 
-### Configuration File Documentation
+### Configuration File
 This configuration file is used to specify hyperparameters and settings for the model training process.
 
 ```json
