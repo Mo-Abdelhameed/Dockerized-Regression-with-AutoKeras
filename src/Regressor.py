@@ -79,8 +79,9 @@ class Regressor:
             # Define a customized search space
             input_node = ak.StructuredDataInput()
             # Specify the number of neurons and layers in the DenseBlock
-            output_node = ak.DenseBlock(num_layers=Choice("num_layers", values=self.model_config["num_layers"]),
-                                        num_units=Choice("num_units", values=self.model_config["num_units"]))(input_node)
+            output_node = ak.DenseBlock(
+                num_layers=Choice("num_layers", values=self.model_config["num_layers"]),
+                num_units=Choice("num_units", values=self.model_config["num_units"]))(input_node)
             output_node = ak.RegressionHead()(output_node)
             self.predictor = ak.AutoModel(
                 inputs=input_node,

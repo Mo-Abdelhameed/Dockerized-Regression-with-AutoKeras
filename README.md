@@ -140,6 +140,18 @@ The key `instances` contains a list of objects, each of which is a sample for wh
 }
 ```
 
+### Using the Custom Search
+
+To specify custom hyperparameters (number of layers and number of units):
+- Navigate the model_config.json file inside the /src/config directory
+- Set the max_trails key to the maximum number of models to compare
+- Set the custom_search key to true
+- Specify num_units and num_layers as lists of integers
+
+Following this procedure will narrow down search space to the specified values.
+Setting custom_search to False will ignore the num_units and num_layers keys and will widen the search space.
+
+
 #### OpenAPI
 
 Since the service is implemented using FastAPI, we get automatic documentation of the APIs offered by the service. Visit the docs at `http://localhost:8080/docs`.
