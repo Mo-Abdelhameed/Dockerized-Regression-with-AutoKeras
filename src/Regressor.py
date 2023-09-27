@@ -5,12 +5,13 @@ from typing import List
 import numpy as np
 import keras
 import pandas as pd
-from autokeras import StructuredDataRegressor
+import autokeras as ak
 from joblib import dump, load
 from sklearn.exceptions import NotFittedError
 from config import paths
 from schema.data_schema import RegressionSchema
 from utils import read_json_as_dict
+from keras_tuner.engine.hyperparameters import Choice
 
 warnings.filterwarnings("ignore")
 PREDICTOR_FILE_NAME = "predictor.joblib"
@@ -60,7 +61,11 @@ class Regressor:
     regressor models.
     """
 
-    def __init__(self, train_input: pd.DataFrame, schema: RegressionSchema, predictor_dir_path: str = paths.PREDICTOR_DIR_PATH):
+    def __init__(self,
+                 train_input: pd.DataFrame,
+                 schema: RegressionSchema,
+                 predictor_dir_path: str = paths.PREDICTOR_DIR_PATH
+                 ):
         """Construct a new Regressor."""
         self._is_trained: bool = False
         self.x = train_input.drop(columns=[schema.target])
@@ -68,13 +73,21 @@ class Regressor:
         self.schema = schema
         self.model_name = "AutoKeras_regressor"
         self.model_config = read_json_as_dict(paths.MODEL_CONFIG_FILE_PATH)
-        self.predictor = StructuredDataRegressor(
-            column_names=list(self.x.columns),
-            output_dim=1,
-            loss="mean_squared_error",
-            max_trials=self.model_config["max_trials"],
-            directory=predictor_dir_path
-        )
+        # self.predictor = ak.StructuredDataRegressor(
+        #     column_names=list(self.x.columns),
+        #     output_dim=1,
+        #     loss="mean_squared_error",
+        #     max_trials=self.model_config["max_trials"],
+        #     directory=predictor_dir_path,
+        #     overwrite=True
+        # )
+
+        # Define a customized search space
+        input_node = ak.StructuredDataInput()
+        # Specify the number of neurons in the DenseBlock
+        output_node = ak.DenseBlock(num_layers=Choice("layer", values=[2, 3]), num_units=Choice("units", values=[100, 30]))(input_node)
+        output_node = ak.RegressionHead()(output_node)
+        self.predictor = ak.AutoModel(inputs=input_node, outputs=output_node, max_trials=5, overwrite=True)
 
     def __str__(self):
         return f"Model name: {self.model_name}"
