@@ -73,21 +73,30 @@ class Regressor:
         self.schema = schema
         self.model_name = "AutoKeras_regressor"
         self.model_config = read_json_as_dict(paths.MODEL_CONFIG_FILE_PATH)
-        # self.predictor = ak.StructuredDataRegressor(
-        #     column_names=list(self.x.columns),
-        #     output_dim=1,
-        #     loss="mean_squared_error",
-        #     max_trials=self.model_config["max_trials"],
-        #     directory=predictor_dir_path,
-        #     overwrite=True
-        # )
+        custom_search = self.model_config["custom_search"]
 
-        # Define a customized search space
-        input_node = ak.StructuredDataInput()
-        # Specify the number of neurons in the DenseBlock
-        output_node = ak.DenseBlock(num_layers=Choice("layer", values=[2, 3]), num_units=Choice("units", values=[100, 30]))(input_node)
-        output_node = ak.RegressionHead()(output_node)
-        self.predictor = ak.AutoModel(inputs=input_node, outputs=output_node, max_trials=5, overwrite=True)
+        if custom_search:
+            # Define a customized search space
+            input_node = ak.StructuredDataInput()
+            # Specify the number of neurons and layers in the DenseBlock
+            output_node = ak.DenseBlock(num_layers=Choice("num_layers", values=self.model_config["num_layers"]),
+                                        num_units=Choice("num_units", values=self.model_config["num_units"]))(input_node)
+            output_node = ak.RegressionHead()(output_node)
+            self.predictor = ak.AutoModel(
+                inputs=input_node,
+                outputs=output_node,
+                max_trials=self.model_config["max_trials"],
+                overwrite=True
+            )
+        else:
+            self.predictor = ak.StructuredDataRegressor(
+                column_names=list(self.x.columns),
+                output_dim=1,
+                loss="mean_squared_error",
+                max_trials=self.model_config["max_trials"],
+                directory=predictor_dir_path,
+                overwrite=True
+            )
 
     def __str__(self):
         return f"Model name: {self.model_name}"
