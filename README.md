@@ -1,4 +1,4 @@
-# Dockerized-Regression-with-AutoGluon
+# Dockerized-Regression-with-AutoKeras
 
 ## Project Description
 
@@ -15,7 +15,7 @@ The following are the requirements for using your data with this model:
 
 Here are the highlights of this implementation: <br/>
 
-- A flexible preprocessing pipeline built using **AutoGluon**. Transformations include missing value imputation, categorical encoding, outlier removal and feature scaling. <br/>
+- A flexible preprocessing pipeline built using **Pandas** and **feature-engine**. Transformations include missing value imputation, categorical encoding and feature scaling. <br/>
 - **FASTAPI** inference service for online inferences.
   Additionally, the implementation contains the following features:
 - **Data Validation**: Pydantic data validation is used for the schema, training and test files, as well as the inference request data.
@@ -31,7 +31,9 @@ The following is the directory structure of the project:
   - **`/model/artifacts/`**: This directory is used to store the model artifacts, such as trained models and their parameters.
   - **`/outputs/`**: The outputs directory contains sub-directories for error logs, and hyperparameter tuning outputs, and prediction results.
 - **`requirements/`**: This directory contains the requirements file.
-  - `requirements.txt` for the main code in the `src` directory
+  - `requirements.txt` for the main code in the `src` directory.
+  - `requirements_quality.txt` for dependencies related to code quality, safety, formatting and style checks.
+  - `requirements_text.txt` for dependencies required to run tests in the `tests` directory.
 - **`src/`**: This directory holds the source code for the project. It is further divided into various subdirectories:
   - **`config/`**: for configuration files for data preprocessing and paths, etc.
   - **`data_models/`**: for data models for input validation including the schema, training and test files, and the inference request data. It also contains the data model for the batch prediction results.
@@ -71,7 +73,7 @@ In this section we cover the following:
 ### To run locally (without Docker)
 
 - Create your virtual environment and install dependencies listed in `requirements.txt` which is inside the `requirements` directory.
-- Move the three example files (`titanic_schema.json`, `titanic_train.csv` and `titanic_test.csv`) in the `examples` directory into the `./model_inputs_outputs/inputs/schema`, `./model_inputs_outputs/inputs/data/training` and `./model_inputs_outputs/inputs/data/testing` folders, respectively (or alternatively, place your custom dataset files in the same locations).
+- Move the three example files (`smoke_test_regression_schema.json`, `smoke_test_regression_train.csv` and `smoke_test_regression_test.csv`) in the `examples` directory into the `./model_inputs_outputs/inputs/schema`, `./model_inputs_outputs/inputs/data/training` and `./model_inputs_outputs/inputs/data/testing` folders, respectively (or alternatively, place your custom dataset files in the same locations).
 - Run the script `src/train.py` to train the regression model. This will save the model artifacts, including the preprocessing pipeline and label encoder, in the path `./model_inputs_outputs/model/artifacts/`.
 - Run the script `src/predict.py` to run batch predictions using the trained model. This script will load the artifacts and create and save the predictions in a file called `predictions.csv` in the path `./model_inputs_outputs/outputs/predictions/`.
 - Run the script `src/serve.py` to start the inference service, which can be queried using the `/ping` and `/infer` endpoints. The service runs on port 8080.
