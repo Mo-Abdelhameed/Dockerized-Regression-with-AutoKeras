@@ -10,6 +10,7 @@ from config import paths
 from data_models.data_validator import validate_data
 from logger import get_logger, log_error
 from Regressor import load_predictor_model, predict_with_model
+from preprocessing.pipeline import run_pipeline
 from schema.data_schema import load_saved_schema
 from utils import read_json_as_dict
 
@@ -90,8 +91,11 @@ async def transform_req_data_and_make_predictions(
     # validate the data
     logger.info("Validating data...")
     validate_data(data=data, data_schema=model_resources.data_schema, is_train=False)
+
+    logger.info("Transforming data...")
     ids = data[model_resources.data_schema.id]
     data = data.drop(columns=model_resources.data_schema.id)
+    data = run_pipeline(data, model_resources.data_schema, training=False)
     logger.info("Making predictions...")
     predictions_arr = predict_with_model(
         model_resources.predictor_model,

@@ -60,7 +60,7 @@ class Regressor:
     regressor models.
     """
 
-    def __init__(self, train_input: pd.DataFrame, schema: RegressionSchema):
+    def __init__(self, train_input: pd.DataFrame, schema: RegressionSchema, predictor_dir_path: str = paths.PREDICTOR_DIR_PATH):
         """Construct a new Regressor."""
         self._is_trained: bool = False
         self.x = train_input.drop(columns=[schema.target])
@@ -73,7 +73,7 @@ class Regressor:
             output_dim=1,
             loss="mean_squared_error",
             max_trials=self.model_config["max_trials"],
-            directory=paths.MODEL_ARTIFACTS_PATH
+            directory=predictor_dir_path
         )
 
     def __str__(self):

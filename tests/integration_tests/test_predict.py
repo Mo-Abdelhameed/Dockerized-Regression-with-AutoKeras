@@ -7,7 +7,6 @@ from train import run_training
 
 
 def test_integration_run_batch_predictions(
-    tmpdir,
     input_schema_dir,
     train_dir,
     test_dir,

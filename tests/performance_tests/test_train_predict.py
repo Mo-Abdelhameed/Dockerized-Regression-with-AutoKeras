@@ -78,7 +78,7 @@ def run_training_and_record(
     start_time = time.perf_counter()
     tracemalloc.start()
 
-    # Run the training process with tuning
+    # Run the training process
     run_training(
         input_schema_dir=input_schema_dir,
         saved_schema_dir_path=saved_schema_dir_path,
@@ -202,6 +202,10 @@ def test_train_predict_performance(
             ),
         )
 
+        input_schema_dir, test_dir = store_schema_and_data(
+            tmpdir, schema_dict, sample_data.drop(columns=['target_field'])
+        )
+
         # run prediction workflow and record metrics
         (
             predictions_file_path,
@@ -210,7 +214,7 @@ def test_train_predict_performance(
         ) = run_prediction_and_record(
             tmpdir,
             results["predictor_dir_path"],
-            train_dir,
+            test_dir,
             results["saved_schema_dir_path"],
         )
 

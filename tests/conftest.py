@@ -157,10 +157,11 @@ def test_data_file_name():
 
 
 @pytest.fixture
-def test_dir(sample_test_data, tmpdir, test_data_file_name):
+def test_dir(sample_test_data, tmpdir, test_data_file_name, schema_provider):
     """Fixture to create and save a sample DataFrame for testing"""
     test_data_dir = tmpdir.mkdir("test")
     test_data_file_path = test_data_dir.join(test_data_file_name)
+    sample_test_data = sample_test_data.drop(columns=schema_provider.target)
     sample_test_data.to_csv(test_data_file_path, index=False)
     return str(test_data_dir)
 

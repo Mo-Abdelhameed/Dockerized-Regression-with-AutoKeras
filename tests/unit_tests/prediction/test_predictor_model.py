@@ -1,15 +1,19 @@
 import os
 
 import pytest
-from autogluon.core import TabularDataset
-
+from keras import Model
 from src.Regressor import Regressor, load_predictor_model, save_predictor_model
+from src.preprocessing.pipeline import run_pipeline
 
 
 @pytest.fixture
 def regressor(sample_train_data, schema_provider):
     """Define the regressor fixture"""
-    regressor = Regressor(TabularDataset(sample_train_data), schema=schema_provider)
+    target = sample_train_data[schema_provider.target]
+    sample_train_data = sample_train_data.drop(columns=[schema_provider.id, schema_provider.target])
+    sample_train_data = run_pipeline(sample_train_data, schema_provider, training=True)
+    sample_train_data[schema_provider.target] = target
+    regressor = Regressor(sample_train_data, schema=schema_provider)
     return regressor
 
 
@@ -18,6 +22,8 @@ def test_fit_predict(regressor, sample_train_data, sample_test_data, schema_prov
     Test if the fit method trains the model correctly and if predict method work as expected.
     """
     regressor.train()
+    sample_test_data = sample_test_data.drop(columns=[schema_provider.id, schema_provider.target])
+    sample_test_data = run_pipeline(sample_test_data, schema_provider, training=False)
     predictions = regressor.predict(sample_test_data)
     assert predictions.shape[0] == sample_test_data.shape[0]
 
@@ -64,4 +70,4 @@ def test_load_predictor_model(tmpdir, regressor, sample_train_data, schema_provi
     save_predictor_model(regressor, model_dir_path)
 
     loaded_clf = load_predictor_model(model_dir_path)
-    assert isinstance(loaded_clf, Regressor)
+    assert isinstance(loaded_clf, Model)
