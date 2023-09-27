@@ -7,6 +7,6 @@
   "custom_search": true,
   "search_space": {
     "num_layers": [2, 3],
-    "num_units": [30, 100]
+    "num_units": [100, 30]
   }
 }
