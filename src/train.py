@@ -47,7 +47,7 @@ def run_training(
         x_train = run_pipeline(x_train, data_schema, training=True)
         x_train[data_schema.target] = target
 
-        regressor = Regressor(x_train, data_schema, predictor_dir_path=predictor_dir_path)
+        regressor = Regressor(x_train, data_schema)
         regressor.train()
         if not os.path.exists(predictor_dir_path):
             os.makedirs(predictor_dir_path)

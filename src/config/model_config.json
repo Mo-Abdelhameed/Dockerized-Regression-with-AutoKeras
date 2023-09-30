@@ -1,12 +1,10 @@
 {
   "seed_value": 123,
-  "validation_split": 0.1,
   "prediction_field_name": "prediction",
   "max_trials": 10,
   "epochs": 200,
-  "custom_search": true,
-  "search_space": {
-    "num_layers": [2, 3],
-    "num_units": [100, 30]
-  }
+  "layers_input_dimension": [0.25, 0.5, 1, 1.5, 2],
+  "custom_search": false,
+  "num_layers": [2, 3],
+  "custom_num_units": [100, 30]
 }

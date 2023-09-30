@@ -146,15 +146,13 @@ This configuration file is used to specify hyperparameters and settings for the 
 ```json
 {
   "seed_value": 123,
-  "validation_split": 0.1,
   "prediction_field_name": "prediction",
   "max_trials": 10,
   "epochs": 200,
-  "custom_search": true,
-  "search_space": {
-    "num_layers": [2, 3, 4],
-    "num_units": [30, 40, 50, 80, 90, 100]
-  }
+  "layers_input_dimension": [0.25, 0.5, 1, 1.5, 2],
+  "custom_search": false,
+  "num_layers": [2, 3],
+  "custom_num_units": [100, 30]
 }
 ```
 
@@ -169,15 +167,12 @@ Fields:
 - max_trials: (Integer) The maximum number of trials for searching the best model. Each trial is a unique combination of hyperparameters.
 
 - epochs: (Integer) The number of epochs for training the model.
-
+- layers_input_dimension (Array of Numbers): Specifies the number of units as a function of the number of input features. If custom search is set to true, this variable has no effect.
 - custom_search: (Boolean) Indicates whether to use a custom search space for hyperparameters. If false, the model will use default search spaces.
-
-- search_space: (Object) Defines the custom search space for hyperparameters if custom_search is set to true.
 
 - num_layers: (Array of Integers) Specifies the possible number of layers in the model. For example, [2, 3, 4] means the model will search among architectures with 2, 3, or 4 layers.
 
-- num_units: (Array of Integers) Specifies the possible number of neurons (units) in each layer. For example, [30, 40, 50, 80, 90, 100] means the model will search among architectures with layers containing any of these numbers of neurons.
-
+- custom_num_units: (Array of Integers) Specifies the possible number of neurons (units) in each layer. For example, [30, 40, 50, 80] means the model will search among architectures with layers containing any of these numbers of neurons. The effect of this variable is present only when "custom_search" is true.
 
 
 #### OpenAPI

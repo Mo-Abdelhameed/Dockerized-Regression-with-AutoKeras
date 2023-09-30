@@ -64,7 +64,6 @@ class Regressor:
     def __init__(self,
                  train_input: pd.DataFrame,
                  schema: RegressionSchema,
-                 predictor_dir_path: str = paths.PREDICTOR_DIR_PATH
                  ):
         """Construct a new Regressor."""
         self._is_trained: bool = False
@@ -74,30 +73,26 @@ class Regressor:
         self.model_name = "AutoKeras_regressor"
         self.model_config = read_json_as_dict(paths.MODEL_CONFIG_FILE_PATH)
         custom_search = self.model_config["custom_search"]
+        num_features = len(self.x.columns)
+        dimensions = self.model_config["layers_input_dimension"]
+        num_units = self.model_config["custom_num_units"] if custom_search else [int(i * num_features) for i in
+                                                                                 dimensions if
+                                                                                 int(i * num_features) > 1]
+        num_layers = self.model_config["num_layers"]
 
-        if custom_search:
-            # Define a customized search space
-            input_node = ak.StructuredDataInput()
-            # Specify the number of neurons and layers in the DenseBlock
-            output_node = ak.DenseBlock(
-                num_layers=Choice("num_layers", values=self.model_config["search_space"]["num_layers"]),
-                num_units=Choice("num_units", values=self.model_config["search_space"]["num_units"]))(input_node)
-            output_node = ak.RegressionHead()(output_node)
-            self.predictor = ak.AutoModel(
-                inputs=input_node,
-                outputs=output_node,
-                max_trials=self.model_config["max_trials"],
-                overwrite=True
-            )
-        else:
-            self.predictor = ak.StructuredDataRegressor(
-                column_names=list(self.x.columns),
-                output_dim=1,
-                loss="mean_squared_error",
-                max_trials=self.model_config["max_trials"],
-                directory=predictor_dir_path,
-                overwrite=True
-            )
+        # Define a customized search space
+        input_node = ak.StructuredDataInput()
+        # Specify the number of neurons and layers in the DenseBlock
+        output_node = ak.DenseBlock(
+            num_layers=Choice("num_layers", values=num_layers),
+            num_units=Choice("num_units", values=num_units))(input_node)
+        output_node = ak.RegressionHead()(output_node)
+        self.predictor = ak.AutoModel(
+            inputs=input_node,
+            outputs=output_node,
+            max_trials=self.model_config["max_trials"],
+            overwrite=True
+        )
 
     def __str__(self):
         return f"Model name: {self.model_name}"
