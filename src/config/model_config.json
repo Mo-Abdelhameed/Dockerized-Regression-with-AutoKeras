@@ -4,7 +4,7 @@
   "max_trials": 10,
   "epochs": 200,
   "layers_input_dimension": [0.25, 0.5, 1, 1.5, 2],
-  "custom_search": false,
+  "custom_search": true,
   "num_layers": [2, 3],
   "custom_num_units": [100, 30]
 }
