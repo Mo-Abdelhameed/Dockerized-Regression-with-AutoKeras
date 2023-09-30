@@ -103,7 +103,6 @@ class Regressor:
             x=self.x,
             y=self.y,
             epochs=self.model_config["epochs"],
-            validation_split=self.model_config["validation_split"]
         )
         self._is_trained = True
 
