@@ -159,19 +159,12 @@ This configuration file is used to specify hyperparameters and settings for the 
 
 Fields:
 - seed_value: (Integer) The seed used for random number generation to ensure reproducibility. Default is 123.
-
-- validation_split: (Float) The fraction of the data to be used as validation data. For instance, a value of 0.1 indicates that 10% of the data is reserved for validation purposes.
-
 - prediction_field_name: (String) The name of the field/column in the output data where the model's predictions will be stored. Default is "prediction".
-
 - max_trials: (Integer) The maximum number of trials for searching the best model. Each trial is a unique combination of hyperparameters.
-
 - epochs: (Integer) The number of epochs for training the model.
 - layers_input_dimension (Array of Numbers): Specifies the number of units as a function of the number of input features. If custom search is set to true, this variable has no effect.
 - custom_search: (Boolean) Indicates whether to use a custom search space for hyperparameters. If false, the model will use default search spaces.
-
 - num_layers: (Array of Integers) Specifies the possible number of layers in the model. For example, [2, 3, 4] means the model will search among architectures with 2, 3, or 4 layers.
-
 - custom_num_units: (Array of Integers) Specifies the possible number of neurons (units) in each layer. For example, [30, 40, 50, 80] means the model will search among architectures with layers containing any of these numbers of neurons. The effect of this variable is present only when "custom_search" is true.
 
 
